@@ -30,7 +30,7 @@ func main() {
 ░  ░  ░   ░  ░░ ░   ░     ░ ░     ░ ░    ░  ░░ ░  ░   ▒   ░        ░ ░░ ░ ░  ░  ░  
       ░   ░  ░  ░   ░  ░    ░  ░    ░  ░ ░  ░  ░      ░  ░░ ░      ░  ░         ░  
                                                           ░                        `)
-	err := http.ListenAndServe("localhost:8000", r)
+	err := http.ListenAndServe("0.0.0.0:8000", r)
 	if err != nil {
 		log.Error(err)
 	}

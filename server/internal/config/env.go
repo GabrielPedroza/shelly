@@ -5,9 +5,11 @@
 package config
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"path/filepath"
+
+	"github.com/joho/godotenv"
 )
 
 // 1. Add the new env var name here
@@ -25,11 +27,19 @@ type AppConfig struct {
 }
 
 func LoadEnv() AppConfig {
-	err := godotenv.Load("../../../.env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+	// Dynamically determine the path to the .env file
+	envPath := func() string {
+		if path := os.Getenv("ENV_PATH"); path != "" {
+			return path
+		}
+		return filepath.Join(os.Getenv("WORKDIR"), "../../../.env") // Default fallback for local development
+	}()
 
+	// Load the .env file
+	err := godotenv.Load(envPath)
+	if err != nil {
+		log.Printf("No .env file found at %s, relying on system environment variables", envPath)
+	}
 	// 2. Properly import the env var. Reference how the other env vars are imported.
 	config := AppConfig{
 		GoogleClientID:        os.Getenv("GOOGLE_CLIENT_ID"),

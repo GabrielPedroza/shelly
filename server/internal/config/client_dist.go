@@ -13,9 +13,17 @@ import (
 )
 
 var (
+	// WorkDir dynamically fetches the working directory
 	WorkDir, _ = os.Getwd()
+
 	// FilesDir points to the client distribution folder
-	FilesDir = http.Dir(filepath.Join(WorkDir, "../../../client/dist"))
+	// Use an environment variable for flexibility, with a fallback default
+	FilesDir = http.Dir(func() string {
+		if path := os.Getenv("CLIENT_DIST_PATH"); path != "" {
+			return path
+		}
+		return filepath.Join(WorkDir, "../../client/dist") // Default fallback for local development
+	}())
 )
 
 // FileServer serves static files from a given directory.
